@@ -16,4 +16,9 @@ public class GetOrderDataTest {
 		Assert.assertNotNull(orderData.getOrderCount());
 
 	}
+	
+	@Test
+	public void orderDetailTest(){
+		Assert.assertNotNull(orderData.getAllOrderDetails());
+	}
 }
