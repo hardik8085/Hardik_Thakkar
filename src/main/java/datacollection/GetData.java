@@ -9,12 +9,12 @@ import createconnection.CreateShopifyConnection;
 import createconnection.ICreateConnection;
 import createconnection.ListOfRequest;
 
-public class GetOrderData implements IGetOrderData {
+public class GetData implements IGetData {
 
 	private ICreateConnection httpConnection = new CreateShopifyConnection();
 
 	@Override
-	public String getOrderData(Enum request) {
+	public String getData(Enum request) {
 
 		
 		HttpURLConnection connection = httpConnection.createConnection(request);

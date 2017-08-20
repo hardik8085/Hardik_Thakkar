@@ -7,7 +7,7 @@ import org.junit.Test;
 import impl.OrderDataManagement;
 import junit.framework.Assert;
 
-public class GetOrderDataTest {
+public class OrderDataTest {
 
 	IOrderDataManagement orderData = new OrderDataManagement();
 	
@@ -20,5 +20,15 @@ public class GetOrderDataTest {
 	@Test
 	public void orderDetailTest(){
 		Assert.assertNotNull(orderData.getAllOrderDetails());
+	}
+	
+	@Test
+	public void minAndMaxOrderDetailTest(){
+		Assert.assertNotNull(orderData.minAndMaxFrequentOrder());
+	}
+	
+	@Test
+	public void medianOrderValue(){
+		Assert.assertNotNull(orderData.medianOrderValue());
 	}
 }

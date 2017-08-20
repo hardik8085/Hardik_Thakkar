@@ -61,6 +61,7 @@ public class CreateShopifyConnection implements ICreateConnection {
 		container.put(ListOfRequest.GET_ALL_CUSTOMER_DETAIL,
 				" https://100pure-demo.myshopify.com/admin/customers.json");
 		container.put(ListOfRequest.GET_ALL_ORGER_COUNT, " https://100pure-demo.myshopify.com/admin/orders/count.json");
+		container.put(ListOfRequest.GET_ALL_CUSTOMER_COUNT, " https://100pure-demo.myshopify.com/admin/orders/count.json");
 
 	}
 }

@@ -1,20 +1,22 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class Order {
 	String orderName;
-	String customerName;
 	Double value;
 	Date date;
+	List<Item> listOfItem;
 
-	public Order(String orderName, String customerName, Double value, Date date) {
+	public Order(String orderName, Double value, Date date,List<Item> listOfItem) {
 		super();
 		this.orderName = orderName;
-		this.customerName = customerName;
 		this.value = value;
 		this.date = date;
+		this.listOfItem = listOfItem;
 	}
 
 	public String getOrderName() {
@@ -23,14 +25,6 @@ public class Order {
 
 	public void setOrderName(String orderName) {
 		this.orderName = orderName;
-	}
-
-	public String getCustomerName() {
-		return customerName;
-	}
-
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
 	}
 
 	public Double getValue() {
@@ -51,8 +45,7 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order [orderName=" + orderName + ", customerName=" + customerName + ", value=" + value + ", date="
-				+ date + "]";
+		return "Order [orderName=" + orderName + ", value=" + value + ", date=" + date + "]";
 	}
 
 }

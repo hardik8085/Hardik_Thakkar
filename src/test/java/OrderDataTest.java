@@ -1,12 +1,12 @@
 import org.junit.Assert;
 import org.junit.Test;
 
-import datacollection.GetOrderData;
-import datacollection.IGetOrderData;
+import datacollection.GetData;
+import datacollection.IGetData;
 
 public class OrderDataTest {
 
-	IGetOrderData orderData = new GetOrderData();
+	IGetData orderData = new GetData();
 	
 	
 	@Test
