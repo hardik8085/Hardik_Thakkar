@@ -2,12 +2,17 @@ package impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.spi.CalendarDataProvider;
 
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.Interval;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -59,7 +64,7 @@ public class OrderDataManagement implements IOrderDataManagement {
 				JSONObject order = (JSONObject) listOfOrder.get(i);
 				String orderName = (String) order.get("name");
 				String date = (String) order.get("created_at");
-				Date finalDate = new Date(Integer.parseInt(date.substring(0, 4)),
+					DateTime finalDate = new DateTime(Integer.parseInt(date.substring(0, 4)),
 						Integer.parseInt(date.substring(5, 7)), Integer.parseInt(date.substring(8, 10)),
 						Integer.parseInt(date.substring(11, 13)), Integer.parseInt(date.substring(14, 16)),
 						Integer.parseInt(date.substring(17, 19)));
@@ -147,9 +152,9 @@ public class OrderDataManagement implements IOrderDataManagement {
 	}
 
 	@Override
-	public Integer shortestDuration() {
+	public Long shortestDuration() {
 
-		Integer minDuration = -1;
+		Duration minDuration = null;
 		Map<String, Integer> orderContainer = new HashMap<>();
 		if (null == container) {
 			container = getAllOrderDetails();
@@ -158,19 +163,35 @@ public class OrderDataManagement implements IOrderDataManagement {
 		for (String customer : container.keySet()) {
 
 			List<Order> listOfOrder = container.get(customer);
+			Collections.sort(listOfOrder, new Comparator<Order>() {
+		        @Override
+		        public int compare(Order o1, Order o2) {
+		           
+		                return o1.getDate().compareTo(o2.getDate());
+		            
+		        }
+		    });
 			if (listOfOrder.size() > 1) {
-				if (minDuration == -1) {
-					Date firstDate = listOfOrder.get(0).getDate();
-					Date secondDate = listOfOrder.get(1).getDate();
-
+				if (null == minDuration) {
+					DateTime firstDate = listOfOrder.get(0).getDate();
+					DateTime secondDate = listOfOrder.get(1).getDate();
+					Interval interval = new Interval(firstDate, secondDate);
+					minDuration = interval.toDuration();
 				}
 				for (int i = 1; i < listOfOrder.size(); i++) {
-
+					DateTime firstDate = listOfOrder.get(i).getDate();
+					int j = i-1;
+					DateTime secondDate = listOfOrder.get(j).getDate();
+					Interval interval = new Interval(secondDate, firstDate);
+					Duration duration = interval.toDuration();
+					if(duration.getStandardSeconds() < minDuration.getStandardSeconds()){
+						minDuration = duration;
+					}
 				}
 			}
 		}
 
-		return null;
+		return minDuration.getStandardSeconds();
 	}
 
 	@Override

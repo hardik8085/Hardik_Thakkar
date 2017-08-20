@@ -28,7 +28,12 @@ public class OrderDataTest {
 	}
 	
 	@Test
-	public void medianOrderValue(){
+	public void medianOrderValueTest(){
 		Assert.assertNotNull(orderData.medianOrderValue());
+	}
+	
+	@Test
+	public void shortestDurationTest(){
+		Assert.assertNotNull(orderData.shortestDuration());
 	}
 }

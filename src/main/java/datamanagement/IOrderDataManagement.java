@@ -14,7 +14,7 @@ public interface IOrderDataManagement {
 	public Map<String, String> minAndMaxFrequentOrder();
 	
 	
-	public Integer shortestDuration();
+	public Long shortestDuration();
 	
 	
 	public Double medianOrderValue();

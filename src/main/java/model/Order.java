@@ -5,13 +5,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class Order {
+import org.joda.time.DateTime;
+
+public class Order implements Comparable<Order>{
 	String orderName;
 	Double value;
-	Date date;
+	DateTime date;
 	List<Item> listOfItem;
 
-	public Order(String orderName, Double value, Date date,List<Item> listOfItem) {
+	public Order(String orderName, Double value, DateTime date,List<Item> listOfItem) {
 		super();
 		this.orderName = orderName;
 		this.value = value;
@@ -35,17 +37,25 @@ public class Order {
 		this.value = value;
 	}
 
-	public Date getDate() {
+	public DateTime getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(DateTime date) {
 		this.date = date;
 	}
 
 	@Override
 	public String toString() {
 		return "Order [orderName=" + orderName + ", value=" + value + ", date=" + date + "]";
+	}
+
+	@Override
+	public int compareTo(Order o) {
+
+		
+             return this.getDate().compareTo(o.getDate());
+         
 	}
 
 }
