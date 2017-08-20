@@ -1,11 +1,9 @@
 package datamanagement;
 
-import static org.junit.Assert.*;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import impl.OrderDataManagement;
-import junit.framework.Assert;
 
 public class OrderDataTest {
 
@@ -24,7 +22,7 @@ public class OrderDataTest {
 	
 	@Test
 	public void minAndMaxOrderDetailTest(){
-		Assert.assertNotNull(orderData.minAndMaxFrequentOrder());
+		Assert.assertNotNull(orderData.minAndMaxFrequentItem());
 	}
 	
 	@Test

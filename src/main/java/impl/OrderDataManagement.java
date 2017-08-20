@@ -183,7 +183,6 @@ public class OrderDataManagement implements IOrderDataManagement {
 	public Long shortestDuration() {
 
 		Duration minDuration = null;
-		Map<String, Integer> orderContainer = new HashMap<>();
 		if (null == container) {
 			container = getAllOrderDetails();
 		}
@@ -240,8 +239,9 @@ public class OrderDataManagement implements IOrderDataManagement {
 			int length = listOfOrder.size();
 			if (length % 2 == 0) {
 				int median = length / 2;
-				JSONObject medianOrder1 = (JSONObject) listOfOrder.get(25);
-				JSONObject medianOrder2 = (JSONObject) listOfOrder.get(24);
+				JSONObject medianOrder1 = (JSONObject) listOfOrder.get(median);
+				median--;
+				JSONObject medianOrder2 = (JSONObject) listOfOrder.get(median);
 				Double medianValue = (Double.parseDouble((String) medianOrder1.get("total_price_usd"))
 						+ Double.parseDouble((String) medianOrder2.get("total_price_usd"))) / 2;
 				return medianValue;
