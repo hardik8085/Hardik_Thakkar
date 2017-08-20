@@ -1,6 +1,8 @@
 # Hardik_Thakkar
 
-To run program start application under default_package/MainApplication.java
+To run program 
+Build the project using gradle
+start application through file located at default_package/MainApplication.java
 
 Assumption:
 admin/orders/count.json?status=any will provide unique order count
