@@ -7,12 +7,20 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashMap;
 
+/**
+ * Create Connection
+ * @author hardik thakkar
+ *
+ */
 public class CreateShopifyConnection implements ICreateConnection {
 
 	private static String apiCredential = "b1ade8379e97603f3b0d92846e238ad8";
 	static HttpURLConnection connection = null;
 	private static HashMap<Enum, String> container = null;
 
+	/**
+	 * {@link ICreateConnection#createConnection(Enum)}
+	 */
 	@Override
 	public HttpURLConnection createConnection(Enum requireData) {
 
@@ -37,6 +45,10 @@ public class CreateShopifyConnection implements ICreateConnection {
 		return connection;
 	}
 
+	/**
+	 * Set connectino type as per the key word
+	 * @param requireData enum keyword
+	 */
 	public static void setRequestType(String requireData) {
 		try {
 			if (requireData.toLowerCase().contains("get")) {
@@ -55,13 +67,16 @@ public class CreateShopifyConnection implements ICreateConnection {
 
 	}
 
+	/**
+	 * Map enum keyword with url
+	 */
 	public static void mapKeyWithUrl() {
 		container = new HashMap<>();
-		container.put(ListOfRequest.GET_ALL_ORDER_DETAIL, " https://100pure-demo.myshopify.com/admin/orders.json");
+		container.put(ListOfRequest.GET_ALL_ORDER_DETAIL, "  https://100pure-demo.myshopify.com/admin/orders.json?status=any");
 		container.put(ListOfRequest.GET_ALL_CUSTOMER_DETAIL,
 				" https://100pure-demo.myshopify.com/admin/customers.json");
-		container.put(ListOfRequest.GET_ALL_ORGER_COUNT, " https://100pure-demo.myshopify.com/admin/orders/count.json");
-		container.put(ListOfRequest.GET_ALL_CUSTOMER_COUNT, " https://100pure-demo.myshopify.com/admin/orders/count.json");
+		container.put(ListOfRequest.GET_ALL_ORGER_COUNT, "https://100pure-demo.myshopify.com/admin/orders/count.json?status=any");
+		container.put(ListOfRequest.GET_ALL_CUSTOMER_COUNT, " https://100pure-demo.myshopify.com/admin/customers/count.json");
 
 	}
 }

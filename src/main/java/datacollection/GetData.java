@@ -7,16 +7,23 @@ import java.net.HttpURLConnection;
 
 import createconnection.CreateShopifyConnection;
 import createconnection.ICreateConnection;
-import createconnection.ListOfRequest;
 
+/**
+ * Get data from shopify api
+ * @author hardik thakkar
+ *
+ */
 public class GetData implements IGetData {
 
 	private ICreateConnection httpConnection = new CreateShopifyConnection();
 
+	/**
+	 * {@link IGetData # getData(Enum)}
+	 */
 	@Override
 	public String getData(Enum request) {
 
-		
+		//Connection based on the request
 		HttpURLConnection connection = httpConnection.createConnection(request);
 
 		// Get Response
@@ -31,7 +38,6 @@ public class GetData implements IGetData {
 				response.append('\r');
 			}
 			rd.close();
-			System.out.println(response.toString());
 			return response.toString();
 
 		} catch (IOException e) {

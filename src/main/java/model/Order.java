@@ -1,12 +1,14 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
 
+/**
+ * Order related data
+ * @author hardik thakkar
+ *
+ */
 public class Order implements Comparable<Order>{
 	String orderName;
 	Double value;
@@ -45,11 +47,18 @@ public class Order implements Comparable<Order>{
 		this.date = date;
 	}
 
+	public List<Item> getListOfItem(){
+		return this.listOfItem;
+	}
+	
+	
 	@Override
 	public String toString() {
 		return "Order [orderName=" + orderName + ", value=" + value + ", date=" + date + "]";
 	}
 
+	
+	
 	@Override
 	public int compareTo(Order o) {
 

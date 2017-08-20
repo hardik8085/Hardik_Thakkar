@@ -1,14 +1,11 @@
 package impl;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.spi.CalendarDataProvider;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -22,16 +19,24 @@ import createconnection.ListOfRequest;
 import datacollection.GetData;
 import datacollection.IGetData;
 import datamanagement.IOrderDataManagement;
-import model.Customer;
 import model.Item;
 import model.Order;
 
+/**
+ * Order Data Management
+ * 
+ * @author hardik thakkar
+ *
+ */
 public class OrderDataManagement implements IOrderDataManagement {
 
 	IGetData orderData = new GetData();
 	Map<String, List<Order>> container = null;
 	String orderAsString = null;
 
+	/**
+	 * {@link IOrderDataManagement#getOrderCount()}
+	 */
 	@Override
 	public Long getOrderCount() {
 
@@ -49,6 +54,9 @@ public class OrderDataManagement implements IOrderDataManagement {
 		return count;
 	}
 
+	/**
+	 * {@link IOrderDataManagement#getAllOrderDetails()}
+	 */
 	@Override
 	public Map<String, List<Order>> getAllOrderDetails() {
 
@@ -64,7 +72,7 @@ public class OrderDataManagement implements IOrderDataManagement {
 				JSONObject order = (JSONObject) listOfOrder.get(i);
 				String orderName = (String) order.get("name");
 				String date = (String) order.get("created_at");
-					DateTime finalDate = new DateTime(Integer.parseInt(date.substring(0, 4)),
+				DateTime finalDate = new DateTime(Integer.parseInt(date.substring(0, 4)),
 						Integer.parseInt(date.substring(5, 7)), Integer.parseInt(date.substring(8, 10)),
 						Integer.parseInt(date.substring(11, 13)), Integer.parseInt(date.substring(14, 16)),
 						Integer.parseInt(date.substring(17, 19)));
@@ -77,7 +85,8 @@ public class OrderDataManagement implements IOrderDataManagement {
 				for (int j = 0; j < numberOfItem; j++) {
 					JSONObject item = (JSONObject) listOfItem.get(j);
 					String itemName = (String) item.get("name");
-					Item finalItem = new Item(itemName);
+					Long quantity = (Long) item.get("quantity");
+					Item finalItem = new Item(itemName,quantity);
 					finalListOfItem.add(finalItem);
 				}
 
@@ -103,10 +112,13 @@ public class OrderDataManagement implements IOrderDataManagement {
 		return container;
 	}
 
+	/**
+	 * {@link IOrderDataManagement#minAndMaxFrequentItem()}
+	 */
 	@Override
-	public Map<String, String> minAndMaxFrequentOrder() {
+	public Map<String, List<String>> minAndMaxFrequentItem() {
 
-		Map<String, Integer> orderContainer = new HashMap<>();
+		Map<String, Integer> itemContainer = new HashMap<>();
 		if (null == container) {
 			container = getAllOrderDetails();
 		}
@@ -115,42 +127,58 @@ public class OrderDataManagement implements IOrderDataManagement {
 
 			List<Order> listOfOrder = container.get(customer);
 			for (Order order : listOfOrder) {
-				if (orderContainer.containsKey(order.getOrderName())) {
-					int tempCount = orderContainer.get(order.getOrderName());
-					tempCount++;
-					orderContainer.put(order.getOrderName(), tempCount);
-				} else {
-					orderContainer.put(order.getOrderName(), 1);
+				List<Item> listOfItem = order.getListOfItem();
+				for(Item item : listOfItem){
+					if (itemContainer.containsKey(item.getName())) {
+						int tempCount = itemContainer.get(item.getName());
+						tempCount++;
+						itemContainer.put(item.getName(), tempCount);
+					} else {
+						itemContainer.put(item.getName(), 1);
+					}
 				}
+				
 			}
 		}
-		String min = "";
-		Integer minValue = 0;
-		String max = "";
-		Integer maxValue = 0;
-		for (String orderName : orderContainer.keySet()) {
-			if ("".equals(min) && "".equals(max)) {
-				min = orderName;
-				minValue = orderContainer.get(orderName);
-				max = orderName;
-				maxValue = orderContainer.get(orderName);
+		List<String> minItem = null;
+		Integer minValue = -1;
+		List<String> maxItem = null;
+		Integer maxValue = -1;
+		for (String itemName : itemContainer.keySet()) {
+			if (null == minItem && null == maxItem) {
+				minItem = new ArrayList<>();
+				minItem.add(itemName);
+				minValue = itemContainer.get(itemName);
+				maxItem = new ArrayList<>();
+				maxItem.add(itemName);
+				maxValue = itemContainer.get(itemName);
 			} else {
-				if (orderContainer.get(orderName) < minValue) {
-					min = orderName;
-					minValue = orderContainer.get(orderName);
+				if (itemContainer.get(itemName) < minValue) {
+					minItem = new ArrayList<>();
+					minItem.add(itemName);
+					minValue = itemContainer.get(itemName);
+				}else if(itemContainer.get(itemName) == minValue){
+					minItem.add(itemName);
 				}
-				if (orderContainer.get(orderName) > maxValue) {
-					max = orderName;
-					maxValue = orderContainer.get(orderName);
+				if (itemContainer.get(itemName) > maxValue) {
+					maxItem = new ArrayList<>();
+					maxItem.add(itemName);
+					maxValue = itemContainer.get(itemName);
+				}else{
+					maxItem.add(itemName);
 				}
+				
 			}
 		}
-		Map<String, String> response = new HashMap<>();
-		response.put("minimum", min);
-		response.put("maximum", max);
+		Map<String, List<String>> response = new HashMap<>();
+		response.put("minimum", minItem);
+		response.put("maximum", maxItem);
 		return response;
 	}
 
+	/**
+	 * {@link IOrderDataManagement#getAllOrderDetails()()}
+	 */
 	@Override
 	public Long shortestDuration() {
 
@@ -164,13 +192,13 @@ public class OrderDataManagement implements IOrderDataManagement {
 
 			List<Order> listOfOrder = container.get(customer);
 			Collections.sort(listOfOrder, new Comparator<Order>() {
-		        @Override
-		        public int compare(Order o1, Order o2) {
-		           
-		                return o1.getDate().compareTo(o2.getDate());
-		            
-		        }
-		    });
+				@Override
+				public int compare(Order o1, Order o2) {
+
+					return o1.getDate().compareTo(o2.getDate());
+
+				}
+			});
 			if (listOfOrder.size() > 1) {
 				if (null == minDuration) {
 					DateTime firstDate = listOfOrder.get(0).getDate();
@@ -180,11 +208,11 @@ public class OrderDataManagement implements IOrderDataManagement {
 				}
 				for (int i = 1; i < listOfOrder.size(); i++) {
 					DateTime firstDate = listOfOrder.get(i).getDate();
-					int j = i-1;
+					int j = i - 1;
 					DateTime secondDate = listOfOrder.get(j).getDate();
 					Interval interval = new Interval(secondDate, firstDate);
 					Duration duration = interval.toDuration();
-					if(duration.getStandardSeconds() < minDuration.getStandardSeconds()){
+					if (duration.getStandardSeconds() < minDuration.getStandardSeconds()) {
 						minDuration = duration;
 					}
 				}
@@ -194,6 +222,9 @@ public class OrderDataManagement implements IOrderDataManagement {
 		return minDuration.getStandardSeconds();
 	}
 
+	/**
+	 * {@link IOrderDataManagement#medianOrderValue()}
+	 */
 	@Override
 	public Double medianOrderValue() {
 
@@ -202,30 +233,29 @@ public class OrderDataManagement implements IOrderDataManagement {
 		}
 		JSONParser parser = new JSONParser();
 		JSONObject object;
-	
-			try {
-				object = (JSONObject) parser.parse(orderAsString);
-				JSONArray listOfOrder = (JSONArray) object.get("orders");
-				int length = listOfOrder.size();
-				if(length % 2 == 0){
-					int median = length/2;
-					JSONObject medianOrder1 = (JSONObject) listOfOrder.get(25);
-					JSONObject medianOrder2 = (JSONObject) listOfOrder.get(24);
-					Double medianValue = (Double.parseDouble((String) medianOrder1.get("total_price_usd"))+ Double.parseDouble((String) medianOrder2.get("total_price_usd")))/2;
-					return medianValue;
-				}else{
-					int median = (int) Math.floor(length/2);
-					Order medianOrder = (Order) listOfOrder.get(median);
-					System.out.println(medianOrder.getValue());
-					return medianOrder.getValue();
-				}
-			} catch (ParseException e) {
-				e.printStackTrace();
-				System.out.println(e);
-				return null;
+
+		try {
+			object = (JSONObject) parser.parse(orderAsString);
+			JSONArray listOfOrder = (JSONArray) object.get("orders");
+			int length = listOfOrder.size();
+			if (length % 2 == 0) {
+				int median = length / 2;
+				JSONObject medianOrder1 = (JSONObject) listOfOrder.get(25);
+				JSONObject medianOrder2 = (JSONObject) listOfOrder.get(24);
+				Double medianValue = (Double.parseDouble((String) medianOrder1.get("total_price_usd"))
+						+ Double.parseDouble((String) medianOrder2.get("total_price_usd"))) / 2;
+				return medianValue;
+			} else {
+				int median = (int) Math.floor(length / 2);
+				Order medianOrder = (Order) listOfOrder.get(median);
+				return medianOrder.getValue();
 			}
-			
-		
+		} catch (ParseException e) {
+			e.printStackTrace();
+			System.out.println(e);
+			return null;
+		}
+
 	}
 
 }

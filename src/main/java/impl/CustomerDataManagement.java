@@ -8,12 +8,18 @@ import createconnection.ListOfRequest;
 import datacollection.GetData;
 import datacollection.IGetData;
 import datamanagement.ICustomerDataManagement;
-
+/**
+ * Customer Data Management
+ * @author hardik thakkar
+ *
+ */
 public class CustomerDataManagement implements ICustomerDataManagement{
 
 	IGetData orderData = new GetData();
 
-	
+	/**
+	 * {@link ICustomerDataManagement#getCustomerData()}
+	 */
 	@Override
 	public Long getCustomerData() {
 		
