@@ -86,7 +86,7 @@ public class OrderDataManagement implements IOrderDataManagement {
 					JSONObject item = (JSONObject) listOfItem.get(j);
 					String itemName = (String) item.get("name");
 					Long quantity = (Long) item.get("quantity");
-					Item finalItem = new Item(itemName,quantity);
+					Item finalItem = new Item(itemName, quantity);
 					finalListOfItem.add(finalItem);
 				}
 
@@ -128,7 +128,7 @@ public class OrderDataManagement implements IOrderDataManagement {
 			List<Order> listOfOrder = container.get(customer);
 			for (Order order : listOfOrder) {
 				List<Item> listOfItem = order.getListOfItem();
-				for(Item item : listOfItem){
+				for (Item item : listOfItem) {
 					if (itemContainer.containsKey(item.getName())) {
 						int tempCount = itemContainer.get(item.getName());
 						tempCount++;
@@ -137,7 +137,7 @@ public class OrderDataManagement implements IOrderDataManagement {
 						itemContainer.put(item.getName(), 1);
 					}
 				}
-				
+
 			}
 		}
 		List<String> minItem = null;
@@ -157,22 +157,22 @@ public class OrderDataManagement implements IOrderDataManagement {
 					minItem = new ArrayList<>();
 					minItem.add(itemName);
 					minValue = itemContainer.get(itemName);
-				}else if(itemContainer.get(itemName) == minValue){
+				} else if (itemContainer.get(itemName) == minValue) {
 					minItem.add(itemName);
 				}
 				if (itemContainer.get(itemName) > maxValue) {
 					maxItem = new ArrayList<>();
 					maxItem.add(itemName);
 					maxValue = itemContainer.get(itemName);
-				}else{
+				} else {
 					maxItem.add(itemName);
 				}
-				
+
 			}
 		}
 		Map<String, List<String>> response = new HashMap<>();
-		response.put("minimum", minItem);
-		response.put("maximum", maxItem);
+		response.put("Minimum Frequent Item", minItem);
+		response.put("Maximum Frequent Item", maxItem);
 		return response;
 	}
 
@@ -190,6 +190,8 @@ public class OrderDataManagement implements IOrderDataManagement {
 		for (String customer : container.keySet()) {
 
 			List<Order> listOfOrder = container.get(customer);
+
+			// Sort order by Data
 			Collections.sort(listOfOrder, new Comparator<Order>() {
 				@Override
 				public int compare(Order o1, Order o2) {
@@ -198,6 +200,8 @@ public class OrderDataManagement implements IOrderDataManagement {
 
 				}
 			});
+
+			// If size of list if more than 1 then consider the difference
 			if (listOfOrder.size() > 1) {
 				if (null == minDuration) {
 					DateTime firstDate = listOfOrder.get(0).getDate();
@@ -215,7 +219,9 @@ public class OrderDataManagement implements IOrderDataManagement {
 						minDuration = duration;
 					}
 				}
+
 			}
+
 		}
 
 		return minDuration.getStandardSeconds();
